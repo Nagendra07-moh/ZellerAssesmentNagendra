@@ -1,0 +1,20 @@
+{
+  "name": "mock-server",
+  "version": "1.0.0",
+  "description": "Mock server",
+  "main": "index.js",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./index.js"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.4.0",
+    "@graphql-tools/graphql-file-loader": "^7.5.16",
+    "@graphql-tools/load": "^7.8.12",
+    "@graphql-tools/mock": "^8.7.18"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
