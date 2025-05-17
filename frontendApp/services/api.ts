@@ -29,60 +29,37 @@ const MOCK_CUSTOMERS = [
 ]
 
 export const customerApi = {
-  getCustomer: async (id: string) => {
+  getListCustomers: async () => {
     try {
-      // Find customer by id or return a default one
-      const customer = MOCK_CUSTOMERS.find(c => c.id === id) || {
-        id,
-        name: 'Unknown Customer',
-        email: `customer${id}@example.com`,
-        role: 'Admin'
-      };
-
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      return customer;
-    } catch (error) {
-      console.error('Error fetching customer:', error);
-      throw error;
-    }
-  },
-
-  listCustomers : async () => {
-    return MOCK_CUSTOMERS;
-    const query = `
-      query {
-        listZellerCustomers {
-          items {
-            id
-            name
-            email
-            role
+      const response = await axios.post('http://10.0.2.2:9002/', {
+        query: `
+          query {
+            listZellerCustomers {
+              items {
+                id
+                name
+                email
+                role
+              }
+            }
           }
-          nextToken
-        }
-      }
-    `;
-  
-    try {
-      const response = await axios.post('http://localhost:9002/', {
-        query,
+        `
       }, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      console.log('GraphQL Response:->', response.data);
-      return response.data;
-    } catch (error) {
-      console.error('GraphQL Error:', error);
+
+      return response.data?.data?.listZellerCustomers?.items || [];
+    } catch (error: any) {
+      console.error("GraphQL fetch error:", error.message);
+      return MOCK_CUSTOMERS;
     }
   }
 };
 
 export default axios.create({
-  baseURL: 'http://localhost:9002/',
+  baseURL: 'http://10.0.2.2:9002/',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

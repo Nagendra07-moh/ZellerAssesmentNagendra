@@ -1,51 +1,60 @@
-import { useState, useEffect } from "react";
-import { Customer } from "./useCustomers";
+import { useState, useEffect, useMemo } from "react";
+import { customerApi } from "../services/api";
+
+interface Customer {
+  id: string;
+  name?: string;
+  email?: string;
+  role?: string;
+}
 
 export const useHomeHook = () => {
   enum UserType {
     Admin = 'Admin',
     Manager = 'Manager',
   }
+
   const [selectedUserType, setSelectedUserType] = useState<string>(UserType.Admin);
+  const [consumerList, setConsumerList] = useState<Customer[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+
   const toggleUserType = (type: string) => {
     setSelectedUserType(type);
-  }
-  const consumerList: Customer[] = [
-    {
-      "id": "1",
-      "name": "Nagendra Mohan",
-      "email": "test1@test.com",
-      "role": "Manager"
-    },
-    {
-      "id": "2",
-      "name": "John Snow",
-      "email": "test2@test.com",
-      "role": "Admin"
-    },
-    {
-      "id": "3",
-      "name": "Simran Gupta",
-      "email": "test3@test.com",
-      "role": "Manager"
-    },
-    {
-      "id": "4",
-      "name": "Rajesh Kumar",
-      "email": "test4@test.com",
-      "role": "Admin"
-    }
-  ]
-  const [userData, setUserData] = useState<Customer[]>(consumerList);
+  };
 
+  // Fetch data on initial load
   useEffect(() => {
-    const userData = consumerList.filter((user) => user.role === selectedUserType);
-    setUserData(userData);
-  }, [selectedUserType])
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await customerApi.getListCustomers();
+        setConsumerList(response);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('Failed to fetch customers'));
+        console.error('Error fetching customers:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Use memoized filtered data to prevent unnecessary filtering on re-renders
+  const userData = useMemo(() => {
+    return consumerList.filter((user) => user.role === selectedUserType);
+  }, [selectedUserType, consumerList]);
+
   return {
     selectedUserType,
     toggleUserType,
     UserType,
-    userData
-  }
-}
+    userData,
+    loading,
+    error,
+    refreshing,
+    setRefreshing
+  };
+};

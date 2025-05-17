@@ -1,15 +1,23 @@
 import React, { useCallback, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
-import { useCustomers, Customer } from '../hooks/useCustomers';
 import { UserIconBox } from './UserIconBox';
+
+interface Customer {
+  id: string;
+  name?: string;
+  email?: string;
+  role?: string;
+}
 
 interface CustomerListProps {
   consumerList: Customer[];
+  loading: boolean;
+  refreshing: boolean;
+  setRefreshing: (refreshing: boolean) => void;
 }
 
-const CustomerList: React.FC<CustomerListProps> = ({ consumerList }) => {
-  const { customers, loading, error,} = useCustomers();
-  const [refreshing, setRefreshing] = useState(false);
+const CustomerList: React.FC<CustomerListProps> = ({ consumerList, loading, refreshing, setRefreshing }) => {
+ 
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -21,13 +29,6 @@ const CustomerList: React.FC<CustomerListProps> = ({ consumerList }) => {
   };
 
   const renderCustomerItem = useCallback(({ item }: { item: Customer }) => (
-    // <TouchableOpacity 
-    //   style={styles.customerItem}
-    //   testID={`customer-item-${item.id}`}
-    // >
-    //   <Text style={styles.customerName}>{item.name}</Text>
-    //   <Text style={styles.customerRole}>{item.role}</Text>
-    // </TouchableOpacity>
     <View style={{flexDirection:'row',alignItems:'center',marginTop:16}}>
       <UserIconBox inital={item?.name?.charAt(0) || ''} />
       <View>
@@ -37,22 +38,13 @@ const CustomerList: React.FC<CustomerListProps> = ({ consumerList }) => {
     </View>
   ), [consumerList]);
 
-  // if (loading && customers.length === 0) {
-  //   return (
-  //     <View style={styles.centered}>
-  //       <ActivityIndicator size="large" color="#0066cc" testID="loading-indicator" />
-  //     </View>
-  //   );
-  // }
-
-  // if (error && customers.length === 0) {
-  //   return (
-  //     <View style={styles.centered}>
-  //       <Text style={styles.errorText}>Error loading customers</Text>
-  //       <Text>{error.message}</Text>
-  //     </View>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#0066cc" testID="loading-indicator" />
+      </View>
+    );
+  }
 
   return (
     <FlatList

@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
 import CustomerList from './components/CustomerList';
-import { Customer } from './hooks/useCustomers';
 import { CustomSelect } from './components/CustomSelect';
 import { useHomeHook } from './hooks/useHome';
 
 export default function Home() {
- const {selectedUserType, toggleUserType, UserType, userData} = useHomeHook();
+ const {selectedUserType, toggleUserType, UserType, userData, loading, refreshing, setRefreshing} = useHomeHook();
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.seperator} />
@@ -27,7 +25,7 @@ export default function Home() {
       <View style={styles.seperator} />
       <View style={{marginHorizontal:16,marginTop:16}}>
       <Text style={styles.headerTitle}>{selectedUserType} Users</Text>
-      <CustomerList consumerList={userData} />
+      <CustomerList consumerList={userData} loading={loading} refreshing={refreshing} setRefreshing={setRefreshing} />
       </View>
       
     </SafeAreaView>

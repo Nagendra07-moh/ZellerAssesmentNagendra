@@ -1,5 +1,5 @@
 // Mock react-native animated
-jest.mock('react-native/Libraries/Animated/NativeAnimated', () => {
+jest.mock('react-native-reanimated', () => {
   return {
     Value: jest.fn(),
     timing: jest.fn(() => ({ start: jest.fn() })),
