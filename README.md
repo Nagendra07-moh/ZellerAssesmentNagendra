@@ -1,4 +1,4 @@
-# Zeller Customer Management App
+# Zeller Assesment Project By Nagendra
 
 A React Native application for managing customer data with filtering capabilities for Admin and Manager user types.
 
@@ -15,10 +15,9 @@ This application allows users to view and filter customers based on their roles 
 - Filter customers by role (Admin/Manager)
 - Responsive UI with clean, modern design
 - Unit tests for components and hooks
+- Pull To Refresh 
 
-## Screenshots
 
-![Zeller Customers Design](zeller-customers-design.png)
 
 ## Architecture
 
@@ -70,7 +69,7 @@ cd mock-server
 npm start
 ```
 
-The server will run on http://localhost:9002/
+The server will run on http://10.0.2.2:9002/
 
 4. **Start the frontend application**
 
@@ -107,16 +106,6 @@ type CustomerConnection {
   items: [Customer]
 }
 
-type Query {
-  listZellerCustomers: CustomerConnection
-  getZellerCustomer(id: ID!): Customer
-}
-```
-
-### Available Queries
-
-- **listZellerCustomers**: Returns a list of all customers
-- **getZellerCustomer**: Returns a specific customer by ID
 
 ## Testing
 
