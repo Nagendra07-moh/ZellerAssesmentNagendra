@@ -124,11 +124,6 @@ npm test
 - Hook tests ensure proper data fetching and state management
 - Integration tests validate the complete workflow
 
-## Development Notes
-
-- The application uses a mock server for development, but can be connected to a real backend
-- The 10.0.2.2 address is used in the API configuration to allow Android emulators to connect to the host machine
-
 ## Future Enhancements
 
 - Add customer creation functionality
